@@ -18,6 +18,10 @@ public class SpineController : MonoBehaviour
     [NonSerialized]
     public TrackEntry CurrentTrackEntry = null;
     /// <summary>
+    /// 敌人血量
+    /// </summary>
+    public float CurrentBlood = 100;
+    /// <summary>
     /// 攻击位置
     /// </summary>
     public BoneFollowerGraphic AttackPos;
@@ -26,14 +30,36 @@ public class SpineController : MonoBehaviour
     /// </summary>
     public ArrowController[] arrowGroup;
     /// <summary>
+    /// 当前血条
+    /// </summary>
+    public BloodLine currentBloodLine;
+    /// <summary>
+    /// 普通受击文字
+    /// </summary>
+    public HitTextBase noramlHitObject;
+    /// <summary>
+    /// 暴击文字
+    /// </summary>
+    public HitTextBase criticalStrikeObject;
+    /// <summary>
+    /// 普通受击的特效
+    /// </summary>
+    public GameObject NormalEffect;
+    /// <summary>
     /// 添加事件
     /// </summary>
     [NonSerialized]
     public bool isAdd = false;
+    /// <summary>
+    /// 最大血量
+    /// </summary>
+    [NonSerialized]
+    public float MaxBlood;
 
     private void Awake()
     {
         CurrentSkeleton = transform.GetComponentInChildren<SkeletonGraphic>();
+        MaxBlood = CurrentBlood;
     }
 
     #region SpineEvent
@@ -85,6 +111,14 @@ public class SpineController : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// 受击
+    /// </summary>
+    public virtual void GetHit(float hitnumber)
+    {
+
+    }
+
     public virtual void StandBy()
     {
 
@@ -102,6 +136,33 @@ public class SpineController : MonoBehaviour
         createArrow.transform.localScale = new Vector3(1, 1, 1);
         createArrow.transform.position = AttackPos.transform.position;
         createArrow.SetTarget(targetType);
+    }
+
+    /// <summary>
+    /// 创建受击数字
+    /// </summary>
+    /// <param name="hitType">受击类型</param>
+    /// <param name="number">伤害数字</param>
+    public void CreateHitNumberObjcet(GetHitType hitType, float number)
+    {
+        HitTextBase gameObject = null;
+        switch (hitType)
+        {
+            case GetHitType.Normal:
+                gameObject = GameObject.Instantiate(noramlHitObject);
+                gameObject.transform.SetParent(transform.parent);
+                gameObject.transform.localScale = new Vector3(1, 1, 1);
+                gameObject.transform.localPosition = new Vector2(transform.localPosition.x, transform.localPosition.y);
+                break;
+            case GetHitType.CriticalStrike:
+                gameObject = GameObject.Instantiate(criticalStrikeObject);
+                gameObject.transform.SetParent(transform.parent);
+                gameObject.transform.localScale = new Vector3(1, 1, 1);
+                gameObject.transform.localPosition = new Vector2(transform.localPosition.x, transform.localPosition.y + 200);
+                break;
+        }
+        if (gameObject == null) return;
+        gameObject.SetText(number);
     }
     #endregion
 }

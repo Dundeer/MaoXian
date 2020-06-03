@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using QFramework;
 
 public class PlayerController : MonoBehaviour
 {
@@ -38,11 +39,16 @@ public class PlayerController : MonoBehaviour
     /// 产生的金币组
     /// </summary>
     private List<GoldController> goldGroup = new List<GoldController>();
+    /// <summary>
+    /// 用户金币数
+    /// </summary>
+    private int UserGold;
 
     // Start is called before the first frame update
     void Start()
     {
         enemyTargetX = DataBase.SCREEN_WIDTH * 0.25f;
+        EventManager.Register("AddGold", AddGoldNumber);
     }
 
     /// <summary>
@@ -77,7 +83,17 @@ public class PlayerController : MonoBehaviour
         currentEnemy = GameObject.Instantiate(EnemyObject[randomEnemyIndex]);
         currentEnemy.transform.SetParent(transform);
         currentEnemy.transform.localScale = new Vector3(1, 1, 1);
-        currentEnemy.transform.localPosition = new Vector2(DataBase.SCREEN_WIDTH / 2, -DataBase.SCREEN_HEIGHT * 0.13f);
+        float enemyHeight = 0;
+        switch(currentEnemy.enemyType)
+        {
+            case EnemyType.Bird:
+                enemyHeight = 0;
+                break;
+            case EnemyType.Keight:
+                enemyHeight = -DataBase.SCREEN_HEIGHT * 0.13f;
+                break;
+        }
+        currentEnemy.transform.localPosition = new Vector2(DataBase.SCREEN_WIDTH / 2, enemyHeight);
     }
 
     /// <summary>
@@ -186,6 +202,16 @@ public class PlayerController : MonoBehaviour
             }
             yield return null;
         }
+    }
+
+    /// <summary>
+    /// 添加金币数量
+    /// </summary>
+    private void AddGoldNumber()
+    {
+        UserGold++;
+        EventManager.Send("GoldScaleAnim");
+        EventManager.Send<int>("SetGoldNumber", UserGold);
     }
 
 }

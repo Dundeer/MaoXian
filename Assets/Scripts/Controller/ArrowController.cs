@@ -105,14 +105,11 @@ public class ArrowController : MonoBehaviour
         while (true)
         {
             yield return null;
-            if(currentTarget != null)
+            transform.Translate(Vector3.right * MoveSpeed * Time.deltaTime);
+            liveTime += Time.deltaTime;
+            if (liveTime >= 3.0f)
             {
-                transform.Translate(Vector3.right * MoveSpeed * Time.deltaTime);
-                liveTime += Time.deltaTime;
-                if(liveTime >= 3.0f)
-                {
-                    Destroy(gameObject);
-                }
+                Destroy(gameObject);
             }
         }
     }
@@ -162,11 +159,12 @@ public class ArrowController : MonoBehaviour
         {
             case TargetType.Hero:
                 HeroSpine heroSpine = collision.GetComponent<HeroSpine>();
-                heroSpine.GetHit();
+                heroSpine.GetHit(AttackBlood);
                 Destroy(gameObject);
                 break;
         }
     }
+
     /// <summary>
     /// 碰到敌人
     /// </summary>
@@ -181,6 +179,7 @@ public class ArrowController : MonoBehaviour
                 break;
         }
     }
+
     /// <summary>
     /// 碰到箭
     /// </summary>

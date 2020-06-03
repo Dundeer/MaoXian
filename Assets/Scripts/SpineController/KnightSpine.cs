@@ -6,8 +6,7 @@ public class KnightSpine : EnemySpine
 {
     public override void GetHit()
     {
-        if (CurrentTrackEntry.ToString() != "attack1")
-            PlayAnim("Gethit2");
+        PlayAnim("Gethit2");
     }
 
     public override void Dead()
@@ -19,6 +18,18 @@ public class KnightSpine : EnemySpine
     public override void Attack()
     {
         PlayAnim("attack1");
+        DelayCreate(0.5f, 0);
+    }
+
+    public override void StartHandleEvent(TrackEntry trackEntry)
+    {
+        base.StartHandleEvent(trackEntry);
+        switch (trackEntry.ToString())
+        {
+            case "Gethit2":
+                StopCreate();
+                break;
+        }
     }
 
     public override void CompleteHandleEvent(TrackEntry trackEntry)
@@ -26,11 +37,10 @@ public class KnightSpine : EnemySpine
         switch (trackEntry.ToString())
         {
             case "attack1":
-                CreateArrow(0, TargetType.Hero);
                 StartCoroutine(WaitAttack());
                 break;
             case "Gethit2":
-                StartCoroutine(WaitAttack());
+                Attack();
                 break;
         }
     }

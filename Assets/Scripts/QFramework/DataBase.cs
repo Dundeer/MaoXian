@@ -28,15 +28,15 @@ public class DataBase
     /// <summary>
     /// 深色背景移动速度
     /// </summary>
-    public static float DARK_BG_SPEED = 2;
+    public static float DARK_BG_SPEED = 3;
     /// <summary>
     /// 浅色背景移动速度
     /// </summary>
-    public static float LIGHT_BG_SPEED = 3;
+    public static float LIGHT_BG_SPEED = 4;
     /// <summary>
     /// 前方遮挡移动速度
     /// </summary>
-    public static float GRASS_BG_SPEED = 2;
+    public static float GRASS_BG_SPEED = 3;
     /// <summary>
     /// 产生敌人的间隔
     /// </summary>

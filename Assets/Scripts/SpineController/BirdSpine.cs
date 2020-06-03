@@ -10,8 +10,7 @@ public class BirdSpine : EnemySpine
 
     public override void GetHit()
     {
-        if (CurrentTrackEntry.ToString() != "Gethit1")
-            PlayAnim("Gethit1");
+        PlayAnim("Gethit1");
     }
 
     public override void StandBy()
@@ -27,6 +26,18 @@ public class BirdSpine : EnemySpine
     public override void Attack()
     {
         PlayAnim("attack");
+        DelayCreate(0.5f, 0);
+    }
+
+    public override void StartHandleEvent(TrackEntry trackEntry)
+    {
+        base.StartHandleEvent(trackEntry);
+        switch (trackEntry.ToString())
+        {
+            case "Gethit1":
+                StopCreate();
+                break;
+        }
     }
 
     public override void CompleteHandleEvent(TrackEntry trackEntry)

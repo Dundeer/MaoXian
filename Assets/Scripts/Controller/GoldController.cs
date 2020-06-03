@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using QFramework;
 
 public class GoldController : MonoBehaviour
 {
@@ -61,6 +62,7 @@ public class GoldController : MonoBehaviour
         transform.DOLocalMove(pos, delayTime);
         transform.DOScale(new Vector3(0, 0, 0), delayTime);
         yield return new WaitForSeconds(delayTime);
+        EventManager.Send("AddGold");
         recycleCustom.complete = true;
         Destroy(gameObject);
     }

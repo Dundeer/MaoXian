@@ -2,6 +2,12 @@
 using System.Collections;
 using UnityEngine;
 
+public enum ListenceTarget
+{
+    Hero,
+    Enemy
+}
+
 public class Custom : CustomYieldInstruction
 {
     public bool complete = false;

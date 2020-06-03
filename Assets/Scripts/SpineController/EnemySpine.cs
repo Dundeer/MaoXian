@@ -1,4 +1,5 @@
 ﻿using Spine;
+using System.Collections;
 using UnityEngine;
 
 
@@ -14,41 +15,35 @@ public enum GetHitType
     CriticalStrike
 }
 
+public enum EnemyType
+{
+    Keight,
+    Bird
+}
+
 public class EnemySpine : SpineController
 {
     /// <summary>
-    /// 敌人血量
+    /// 当前敌人类型
     /// </summary>
-    public float EnemyBlood = 100;
+    public EnemyType enemyType;
     /// <summary>
     /// 碰撞核
     /// </summary>
     public BoxCollider2D currentBox;
     /// <summary>
-    /// 当前血条
-    /// </summary>
-    public EnemyBloodLine currentBloodLine;
-    /// <summary>
-    /// 普通受击文字
-    /// </summary>
-    public HitTextBase noramlHitObject;
-    /// <summary>
-    /// 暴击文字
-    /// </summary>
-    public HitTextBase criticalStrikeObject;
-    /// <summary>
-    /// 普通受击的特效
-    /// </summary>
-    public GameObject NormalEffect;
-    /// <summary>
     /// 敌人死亡记录
     /// </summary>
     private Custom deadCustom;
+    /// <summary>
+    /// 创造箭矢的携程
+    /// </summary>
+    private Coroutine createCoroutine;
 
     private void Start()
     {
         StandBy();
-        currentBloodLine.IniteBlood(EnemyBlood);
+        currentBloodLine.IniteBlood(CurrentBlood);
     }
 
     /// <summary>
@@ -72,31 +67,12 @@ public class EnemySpine : SpineController
     /// 受击
     /// </summary>
     /// <param name="hitnumber">伤害数字</param>
-    public void GetHit(float hitnumber)
+    public override void GetHit(float hitnumber)
     {
         hitnumber = GetHitNumberShow(hitnumber);
-        EnemyBlood -= hitnumber;
+        CurrentBlood -= hitnumber;
         currentBloodLine.CutBlood(hitnumber);
-        if (EnemyBlood <= 0)
-        {
-            Dead();
-        }
-        else
-        {
-            GetHit();
-        }
-    }
-
-    /// <summary>
-    /// 受击
-    /// </summary>
-    /// <param name="hitnumber">伤害数字</param>
-    public void GetHit(int hitnumber)
-    {
-        float newHitNumber = GetHitNumberShow(hitnumber);
-        EnemyBlood -= newHitNumber;
-        currentBloodLine.CutBlood(newHitNumber);
-        if (EnemyBlood <= 0)
+        if (CurrentBlood <= 0)
         {
             Dead();
         }
@@ -112,7 +88,7 @@ public class EnemySpine : SpineController
     /// <param name="hitNumber">伤害数字</param>
     private float GetHitNumberShow(float hitNumber)
     {
-        float isCriticalStrike = UnityEngine.Random.Range(0, 4.0f);
+        float isCriticalStrike = Random.Range(0, 4.0f);
         if(isCriticalStrike > 3.0f)
         {
             //暴击了
@@ -133,33 +109,6 @@ public class EnemySpine : SpineController
     }
 
     /// <summary>
-    /// 创建受击数字
-    /// </summary>
-    /// <param name="hitType">受击类型</param>
-    /// <param name="number">伤害数字</param>
-    private void CreateHitNumberObjcet(GetHitType hitType, float number)
-    {
-        HitTextBase gameObject = null;
-        switch (hitType)
-        {
-            case GetHitType.Normal:
-                gameObject = GameObject.Instantiate(noramlHitObject);
-                gameObject.transform.SetParent(transform.parent);
-                gameObject.transform.localScale = new Vector3(1, 1, 1);
-                gameObject.transform.localPosition = new Vector2(transform.localPosition.x, transform.localPosition.y);
-                break;
-            case GetHitType.CriticalStrike:
-                gameObject = GameObject.Instantiate(criticalStrikeObject);
-                gameObject.transform.SetParent(transform.parent);
-                gameObject.transform.localScale = new Vector3(1, 1, 1);
-                gameObject.transform.localPosition = new Vector2(transform.localPosition.x, transform.localPosition.y + 200);
-                break;
-        }
-        if (gameObject == null) return;
-        gameObject.SetText(number);
-    }
-
-    /// <summary>
     /// 关闭碰撞器
     /// </summary>
     public void CloseBox()
@@ -171,5 +120,22 @@ public class EnemySpine : SpineController
     {
         if (debug)
             Debug.Log("敌人开始动画" + trackEntry);
+    }
+
+    public void DelayCreate(float waitTime, int arrowType)
+    {
+        createCoroutine = StartCoroutine(DelayCreateFunc(waitTime, arrowType));
+    }
+
+    public void StopCreate()
+    {
+        if (createCoroutine != null) StopCoroutine(createCoroutine);
+    }
+
+    IEnumerator DelayCreateFunc(float waitTime, int arrowType)
+    {
+        yield return new WaitForSeconds(waitTime);
+        CreateArrow(arrowType, TargetType.Hero);
+        createCoroutine = null;
     }
 }
