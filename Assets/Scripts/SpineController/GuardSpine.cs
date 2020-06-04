@@ -67,6 +67,8 @@ public class GuardSpine : HeroSpine
     /// 英雄攻击模式
     /// </summary>
     private HeroAttackMode heroAttackMode;
+
+    private int specialAttackMode = 0;
     #endregion
 
     #region Unity
@@ -229,6 +231,10 @@ public class GuardSpine : HeroSpine
         CreateArrow(arrowType, TargetType.Enemy);
     }
 
+    /// <summary>
+    /// 附魔连击
+    /// </summary>
+    /// <returns></returns>
     IEnumerator EnchantmentCombo()
     {
         //播放技能动画
@@ -242,12 +248,49 @@ public class GuardSpine : HeroSpine
         RandomAttack();
     }
 
+    /// <summary>
+    /// 等待播放附魔动画
+    /// </summary>
+    /// <returns></returns>
     IEnumerator WaitPlayMagicEffect()
     {
         yield return new WaitForSeconds(0.2f);
         AttackPos.SetBone("d_g");
         AttackPos.Initialize();
         EventManager.Send<Vector3>("HeroMagicPlay", AttackPos.transform.localPosition + AttackPos.transform.parent.localPosition);
+    }
+
+    IEnumerator ArrowRain()
+    {
+        //播放前摇动作
+        PlayAnim("Skill2");
+
+        //等待动作到位
+        yield return new WaitForSeconds(0.2f);
+
+        //剑雨生成
+        if (arrowGroup[3] == null)
+        {
+            Debug.LogError("剑雨物体不存在");
+            specialAttackCoroutine = null;
+            StopSpecial();
+            yield break;
+        }
+        float createX = DataBase.SCREEN_WIDTH * 0.25f;
+        float createY = DataBase.SCREEN_HEIGHT / 2;
+        for (int c = 0; c < 10;c++)
+        {
+            var rainArrow = GameObject.Instantiate(arrowGroup[3], transform.parent, false);
+            rainArrow.transform.eulerAngles = new Vector3(0, 0, -90);
+            rainArrow.transform.localPosition = new Vector3(createX + UnityEngine.Random.Range(-150, 150), createY, 0);
+            rainArrow.SetTarget(TargetType.Enemy);
+            yield return new WaitForSeconds(UnityEngine.Random.Range(0.2f, 0.5f));
+        }
+
+        //回归普通攻击
+        yield return new WaitForSeconds(0.5f);
+        ResetAttackMode();
+        RandomAttack();
     }
     #endregion
 
@@ -414,20 +457,24 @@ public class GuardSpine : HeroSpine
                     Attack(AttackType);
                     break;
             }
-            //switch (AttackType)
-            //{
-            //    case 2:
-            //        StandBy(0);
-            //        break;
-            //    default:
-            //        break;
-            //}
         }
     }
 
     private void StartSpecial()
     {
-        specialAttackCoroutine = StartCoroutine(EnchantmentCombo());
+        if (debug)
+            Debug.Log($"当前特殊攻击类型{specialAttackMode}");
+        switch(specialAttackMode)
+        {
+            case 0:
+                specialAttackCoroutine = StartCoroutine(EnchantmentCombo());
+                break;
+            case 1:
+                specialAttackCoroutine = StartCoroutine(ArrowRain());
+                break;
+        }
+        if (specialAttackMode == 1) return;
+        specialAttackMode++;
     }
 
     private void StopSpecial()
@@ -436,6 +483,7 @@ public class GuardSpine : HeroSpine
         AttackPos.SetBone("s_g");
         AttackPos.Initialize();
         ResetAttackMode();
+        specialAttackMode = 0;
     }
 
     private void ResetAttackMode()
@@ -451,7 +499,7 @@ public class GuardSpine : HeroSpine
     /// </summary>
     private void SetNormalAttackTimes()
     {
-        NormalAttackTargetTimes = UnityEngine.Random.Range(3, 5);
+        NormalAttackTargetTimes = UnityEngine.Random.Range(1, 3);
         NormalAttackTimes = 0;
         heroAttackMode = HeroAttackMode.Normal;
     }
@@ -473,7 +521,6 @@ public class GuardSpine : HeroSpine
         specialAttackCustom = new Custom();
         CurrentSkeleton.AnimationState.TimeScale = 2;
         PlayAnim("attack2");
-        StartCoroutine(WaitPlayMagicEffect());
         return specialAttackCustom;
     }
     #endregion

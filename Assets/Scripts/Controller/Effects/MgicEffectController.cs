@@ -27,14 +27,28 @@ public class MgicEffectController : MonoBehaviour
                 break;
         }
         parentParticle = GetComponent<ParticleSystem>();
-        parentParticle.Stop();
         childParticle = GetComponentsInChildren<UnityEngine.ParticleSystem>();
+        EffectInit();
         EventManager.Register<Vector3>(target, PlayEffects);
+    }
+
+    private void EffectInit()
+    {
+        parentParticle.Stop();
+        foreach (ParticleSystem child in childParticle)
+        {
+            child.gameObject.SetActive(false);
+            child.Stop();
+        }
     }
 
     private void PlayEffects(Vector3 pos)
     {
         transform.localPosition = pos;
+        foreach (ParticleSystem child in childParticle)
+        {
+            child.gameObject.SetActive(true);
+        }
         parentParticle.Play();
         StartCoroutine(StopEffects());
     }
@@ -42,10 +56,6 @@ public class MgicEffectController : MonoBehaviour
     IEnumerator StopEffects()
     {
         yield return new WaitForSeconds(2.0f);
-        parentParticle.Stop();
-        foreach(ParticleSystem child in childParticle)
-        {
-            child.Stop();
-        }
+        EffectInit();
     }
 }

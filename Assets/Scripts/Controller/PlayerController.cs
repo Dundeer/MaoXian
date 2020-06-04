@@ -213,4 +213,13 @@ public class PlayerController : MonoBehaviour
         EventManager.Send<int>("SetGoldNumber", UserGold);
     }
 
+    /// <summary>
+    /// 获得当前敌人的坐标
+    /// </summary>
+    /// <returns>当前敌人的坐标</returns>
+    public Vector2 GetEnemyPos()
+    {
+        return currentEnemy.transform.localPosition;
+    }
+
 }

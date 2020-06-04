@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public enum ArrowType
@@ -16,7 +17,11 @@ public enum ArrowType
     /// <summary>
     /// 重量级
     /// </summary>
-    heavy
+    heavy,
+    /// <summary>
+    /// 剑雨
+    /// </summary>
+    rain
 }
 /// <summary>
 /// 目标类型
@@ -129,6 +134,9 @@ public class ArrowController : MonoBehaviour
             case "Arrow":
                 CollistionArrow(collistionObject);
                 break;
+            case "Down":
+                Destroy(GetComponent<Rigidbody2D>());
+                break;
         }
     }
 
@@ -175,7 +183,15 @@ public class ArrowController : MonoBehaviour
             case TargetType.Enemy:
                 EnemySpine enemySpine = collision.GetComponent<EnemySpine>();
                 enemySpine.GetHit(AttackBlood);
-                Destroy(gameObject);
+                switch (arrowType)
+                {
+                    case ArrowType.rain:
+                        Destroy(gameObject);
+                        break;
+                    default:
+                        Destroy(gameObject);
+                        break;
+                }
                 break;
         }
     }
