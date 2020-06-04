@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class KnightSpine : EnemySpine
 {
+    public override void Create()
+    {
+        currentBloodLine.IniteBlood(CurrentBlood);
+    }
+
     public override void GetHit()
     {
         PlayAnim("Gethit2");

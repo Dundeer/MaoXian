@@ -29,23 +29,6 @@ public class GoldController : MonoBehaviour
         goldImage = transform.GetComponent<Image>();
         goldImage.sprite = GoldSprite[currentImageIndex];
     }
-    /// <summary>
-    /// 金币动画
-    /// </summary>
-    private void GoldAnim()
-    {
-        currentImageIndex++;
-        if(currentImageIndex == GoldSprite.Length - 1)
-        {
-            currentImageIndex = 0;
-        }
-        goldImage.sprite = GoldSprite[currentImageIndex];
-    }
-
-    private void CreateAnim()
-    {
-
-    }
 
     public Custom RecycleGold(Vector3 pos)
     {
@@ -66,10 +49,4 @@ public class GoldController : MonoBehaviour
         recycleCustom.complete = true;
         Destroy(gameObject);
     }
-
-    public void AddForce()
-    {
-        currentRigi.AddForce(new Vector2(Random.Range(0, 10), Random.Range(0, 10)), ForceMode2D.Force);
-    }
-
 }

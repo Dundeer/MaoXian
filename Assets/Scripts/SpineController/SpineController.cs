@@ -59,7 +59,7 @@ public class SpineController : MonoBehaviour
     private void Awake()
     {
         CurrentSkeleton = transform.GetComponentInChildren<SkeletonGraphic>();
-        MaxBlood = CurrentBlood;
+        MaxBlood = CurrentBlood; 
     }
 
     #region SpineEvent
@@ -69,7 +69,6 @@ public class SpineController : MonoBehaviour
     /// <param name="animName">动画名</param>
     public void PlayAnim(string animName, bool loop = false, int tarck = 0)
     {
-
         CurrentSkeleton.AnimationState.ClearTracks();
         CurrentTrackEntry = CurrentSkeleton.AnimationState.SetAnimation(tarck, animName, loop);
 

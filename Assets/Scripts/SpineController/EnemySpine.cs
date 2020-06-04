@@ -40,10 +40,9 @@ public class EnemySpine : SpineController
     /// </summary>
     private Coroutine createCoroutine;
 
-    private void Start()
+    public virtual void Create()
     {
-        StandBy();
-        currentBloodLine.IniteBlood(CurrentBlood);
+        
     }
 
     /// <summary>

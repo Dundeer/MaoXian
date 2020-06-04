@@ -112,6 +112,12 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!224 &86601393 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5017383689516494487, guid: cf452e86a7e210a4d8cf867ed2b97c05,
+    type: 3}
+  m_PrefabInstance: {fileID: 599124261}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &321391261
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1077,6 +1083,148 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68cdd718d06d80547891ab214a9f045d, type: 3}
+--- !u!1001 &1873817845
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 86601393}
+    m_Modifications:
+    - target: {fileID: 8947149935612520950, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_Name
+      value: Bird
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 447
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 400
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 400
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2068724785, guid: 6596b2a1dd27b8e4ba3d7fe192425873, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2068724785, guid: 6596b2a1dd27b8e4ba3d7fe192425873, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6596b2a1dd27b8e4ba3d7fe192425873, type: 3}
 --- !u!114 &1894387101 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 355066777, guid: 68cdd718d06d80547891ab214a9f045d,

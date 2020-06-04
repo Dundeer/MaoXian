@@ -369,6 +369,7 @@ public class GuardSpine : HeroSpine
                 switch (heroAttackMode)
                 {
                     case HeroAttackMode.Special:
+                        EventManager.Send<Vector3>("HeroWindMagic", AttackPos.transform.localPosition + AttackPos.transform.parent.localPosition);
                         CreateArrow(1, TargetType.Enemy);
                         break;
                     case HeroAttackMode.Normal:
@@ -442,6 +443,7 @@ public class GuardSpine : HeroSpine
         specialAttackCustom = null;
         CurrentSkeleton.AnimationState.TimeScale = 1;
         heroAttackMode = HeroAttackMode.Normal;
+        SpecialAttackTimes = 0;
     }
 
     /// <summary>

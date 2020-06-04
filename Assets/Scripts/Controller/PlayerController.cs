@@ -80,9 +80,8 @@ public class PlayerController : MonoBehaviour
     public void CreateEnemy()
     {
         int randomEnemyIndex = UnityEngine.Random.Range(0, EnemyObject.Length);
-        currentEnemy = GameObject.Instantiate(EnemyObject[randomEnemyIndex]);
-        currentEnemy.transform.SetParent(transform);
-        currentEnemy.transform.localScale = new Vector3(1, 1, 1);
+        currentEnemy = GameObject.Instantiate(EnemyObject[randomEnemyIndex], transform, false);
+        currentEnemy.Create();
         float enemyHeight = 0;
         switch(currentEnemy.enemyType)
         {
@@ -156,14 +155,14 @@ public class PlayerController : MonoBehaviour
             yield break;
         };
         currentEnemy.CloseBox();
+        Vector2 enemyPos = currentEnemy.transform.localPosition;
         int randomGoldNumber = UnityEngine.Random.Range(5, 10);
         while (randomGoldNumber > 0)
         {
-            GoldController child = GameObject.Instantiate(GoldObject);
-            child.transform.SetParent(transform);
-            child.transform.localPosition = currentEnemy.transform.localPosition;
-            child.transform.localScale = new Vector3(1, 1, 1);
-            child.AddForce();
+            GoldController child = GameObject.Instantiate(GoldObject, transform, false);
+            child.transform.localPosition = enemyPos;
+            Vector2 randomPos = new Vector2(enemyPos.x + UnityEngine.Random.Range(-150, 150), -DataBase.SCREEN_HEIGHT * 0.13f - UnityEngine.Random.Range(0, 200));
+            child.transform.DOLocalMove(randomPos, 0.45f);
             goldGroup.Add(child);
             randomGoldNumber--;
         }

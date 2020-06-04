@@ -1,7 +1,18 @@
 ﻿using Spine;
 
+public enum BirdLevel
+{
+
+}
+
 public class BirdSpine : EnemySpine
 {
+    public override void Create()
+    {
+        StandBy();
+        currentBloodLine.IniteBlood(CurrentBlood);
+    }
+
     public override void Dead()
     {
         base.Dead();
