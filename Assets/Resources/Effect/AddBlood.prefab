@@ -9447,9 +9447,9 @@ GameObject:
   - component: {fileID: 7511132970318390420}
   - component: {fileID: 198842306535299400}
   - component: {fileID: 199647938724434512}
-  - component: {fileID: 4900843145602173827}
+  - component: {fileID: 7890226614911186823}
   m_Layer: 0
-  m_Name: JS_00152_show
+  m_Name: AddBlood
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14045,7 +14045,7 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
---- !u!114 &4900843145602173827
+--- !u!114 &7890226614911186823
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -14054,10 +14054,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1268374723596034}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8a5ca35a27440344be58c954916e2a8, type: 3}
+  m_Script: {fileID: 11500000, guid: 178f5b4213fe5154192b1dd6d266c027, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   listenceTarget: 0
+  pEffectsType: 5
+  isStop: 0
+  stopTime: 0
 --- !u!1 &1281965204244134
 GameObject:
   m_ObjectHideFlags: 0

@@ -136,6 +136,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e60bc8ff8086de64b99d409554705498, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 40
+  MoveSpeed: 30
   arrowType: 3
-  AttackBlood: 300
+  AttackBlood: 100

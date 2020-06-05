@@ -31,6 +31,14 @@ public class GuardSpine : HeroSpine
     /// 增加血量提示
     /// </summary>
     public HitTextBase AddBloodObject;
+
+    [Space]
+
+    /// <summary>
+    /// 特殊攻击套路1
+    /// </summary>
+    public int[] specialAttackModeGroup1;
+
     /// <summary>
     /// 当前攻击类型
     /// </summary>
@@ -67,8 +75,18 @@ public class GuardSpine : HeroSpine
     /// 英雄攻击模式
     /// </summary>
     private HeroAttackMode heroAttackMode;
-
+    /// <summary>
+    /// 特殊进攻模式进程
+    /// </summary>
     private int specialAttackMode = 0;
+    /// <summary>
+    /// 当前特殊攻击套路
+    /// </summary>
+    private int[] specialAttackModeGroup;
+    /// <summary>
+    /// 剑雨数量
+    /// </summary>
+    private int rainArrowNumber = 0;
     #endregion
 
     #region Unity
@@ -80,6 +98,11 @@ public class GuardSpine : HeroSpine
     #endregion
 
     #region 父类重写
+    public override void Create()
+    {
+        EventManager.Register("ArrowRainRecord", ArrowRainRecord);
+    }
+
     public override void GetHit()
     {
         if (CurrentTrackEntry.ToString() == "Skill1") return;
@@ -112,7 +135,8 @@ public class GuardSpine : HeroSpine
         StopSpecial();
         enemyDead = true;
         ChangeAnim("attack", "vertigo", true);
-        EventManager.Send("HeroAddBlood");
+        float GuardHeight = ((RectTransform)transform).rect.height;
+        EventManager.Send<Vector3>("HeroAddBloodPlay", new Vector3(0, -GuardHeight / 2, 0));
         float lossBlood = MaxBlood - CurrentBlood;
         int addTimes = (int)Math.Floor(lossBlood / 100.0f);
         float Remainder = lossBlood % 100.0f;
@@ -130,7 +154,6 @@ public class GuardSpine : HeroSpine
             addSpeed = 3.0f / addTimes;
         }
         CurrentBlood = MaxBlood;
-        Debug.Log($"增加次数{addTimes}, 增加速度{addSpeed}, 减少血量{lossBlood}");
         StartCoroutine(AddBlood(addTimes, addSpeed));
     }
 
@@ -188,7 +211,12 @@ public class GuardSpine : HeroSpine
                 Attack(AttackType);
                 break;
             case "Standby02":
-                Attack(AttackType);
+                switch(heroAttackMode)
+                {
+                    case HeroAttackMode.Normal:
+                        Attack(AttackType);
+                        break;
+                }
                 break;
             case "Skill3":
                 if (specialAttackCustom != null)
@@ -196,6 +224,9 @@ public class GuardSpine : HeroSpine
                     EventManager.Send("HeroMagicStop");
                     specialAttackCustom.complete = true;
                 }
+                break;
+            case "Skill4":
+                specialAttackCustom.complete = true;
                 break;
         }
     }
@@ -263,12 +294,13 @@ public class GuardSpine : HeroSpine
     IEnumerator ArrowRain()
     {
         //播放前摇动作
-        PlayAnim("Skill2");
+        yield return StartCoroutine(ArrowRainStand());
 
-        //等待动作到位
-        yield return new WaitForSeconds(0.2f);
+        //等待
+        StandBy(2);
 
         //剑雨生成
+        rainArrowNumber = 0;
         if (arrowGroup[3] == null)
         {
             Debug.LogError("剑雨物体不存在");
@@ -278,14 +310,70 @@ public class GuardSpine : HeroSpine
         }
         float createX = DataBase.SCREEN_WIDTH * 0.25f;
         float createY = DataBase.SCREEN_HEIGHT / 2;
-        for (int c = 0; c < 10;c++)
+        for (int c = 0; c < 10; c++)
         {
             var rainArrow = GameObject.Instantiate(arrowGroup[3], transform.parent, false);
             rainArrow.transform.eulerAngles = new Vector3(0, 0, -90);
-            rainArrow.transform.localPosition = new Vector3(createX + UnityEngine.Random.Range(-150, 150), createY, 0);
-            rainArrow.SetTarget(TargetType.Enemy);
+            rainArrow.transform.localPosition = new Vector3(createX + UnityEngine.Random.Range(-200, 200), createY, 0);
+            rainArrow.SetTarget(TargetType.Enemy, false);
             yield return new WaitForSeconds(UnityEngine.Random.Range(0.2f, 0.5f));
         }
+
+        //回归普通攻击
+        while (true)
+        {
+            yield return null;
+            if (rainArrowNumber == 10)
+            {
+                ResetAttackMode();
+                RandomAttack();
+                yield break;
+            }
+        }
+
+    }
+
+    /// <summary>
+    /// 剑雨前摇
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator ArrowRainStand()
+    {
+        //进入待机
+        StandBy(0);
+        yield return new WaitForSeconds(0.3f);
+
+        //播放魔法动画
+        AttackPos.SetBone("z_g");
+        AttackPos.Initialize();
+        EventManager.Send<Vector3>("HeroMagicPlay", AttackPos.transform.localPosition + AttackPos.transform.parent.localPosition);
+        yield return new WaitForSeconds(1.0f);
+
+        //播放攻击动画
+        yield return PlaySkill4Anim();
+    }
+
+    IEnumerator CareAttack()
+    {
+        //播放前摇动作
+        PlayAnim("Skill1");
+
+        //等待升空
+        yield return new WaitForSeconds(0.6f);
+        CurrentSkeleton.AnimationState.TimeScale = 0;
+
+        //播放特效
+        AttackPos.SetBone("s_g");
+        AttackPos.Initialize();
+        EventManager.Send<Vector3>("HeroCarePlay", AttackPos.transform.localPosition + AttackPos.transform.parent.localPosition);
+        EventManager.Send<Vector3>("HeroAimPlay", Vector3.zero);
+        yield return new WaitForSeconds(2.0f);
+
+        //产生箭矢
+        AttackPos.SetBone("s_g");
+        AttackPos.Initialize();
+        CurrentSkeleton.AnimationState.TimeScale = 1;
+        CreateArrow(2, TargetType.Enemy);
 
         //回归普通攻击
         yield return new WaitForSeconds(0.5f);
@@ -320,6 +408,9 @@ public class GuardSpine : HeroSpine
                 break;
             case 1:
                 ChangeAnim("attack", "Standby", false);
+                break;
+            case 2:
+                ChangeAnim("attack", "Standby_up", true);
                 break;
         }
     }
@@ -426,9 +517,9 @@ public class GuardSpine : HeroSpine
                 CreateArrow(1, TargetType.Enemy);
                 break;
             case "Skill1":
-                AttackPos.SetBone("s_g");
-                AttackPos.Initialize();
-                createArrowCoroutine = StartCoroutine(DelayCreate(0.7f, 2));
+                //AttackPos.SetBone("s_g");
+                //AttackPos.Initialize();
+                //createArrowCoroutine = StartCoroutine(DelayCreate(0.7f, 2));
                 break;
         }
     }
@@ -460,11 +551,19 @@ public class GuardSpine : HeroSpine
         }
     }
 
+    /// <summary>
+    /// 开启特殊攻击
+    /// </summary>
     private void StartSpecial()
     {
+        if (specialAttackModeGroup == null || specialAttackMode == specialAttackModeGroup.Length)
+        {
+            specialAttackMode = 0;
+            specialAttackModeGroup = specialAttackModeGroup1;
+        }
         if (debug)
             Debug.Log($"当前特殊攻击类型{specialAttackMode}");
-        switch(specialAttackMode)
+        switch(specialAttackModeGroup[specialAttackMode])
         {
             case 0:
                 specialAttackCoroutine = StartCoroutine(EnchantmentCombo());
@@ -472,11 +571,16 @@ public class GuardSpine : HeroSpine
             case 1:
                 specialAttackCoroutine = StartCoroutine(ArrowRain());
                 break;
+            case 2:
+                specialAttackCoroutine = StartCoroutine(CareAttack());
+                break;
         }
-        if (specialAttackMode == 1) return;
         specialAttackMode++;
     }
 
+    /// <summary>
+    /// 停止特殊攻击
+    /// </summary>
     private void StopSpecial()
     {
         if (specialAttackCoroutine != null) StopCoroutine(specialAttackCoroutine);
@@ -486,6 +590,9 @@ public class GuardSpine : HeroSpine
         specialAttackMode = 0;
     }
 
+    /// <summary>
+    /// 重置攻击模式
+    /// </summary>
     private void ResetAttackMode()
     {
         specialAttackCustom = null;
@@ -511,18 +618,43 @@ public class GuardSpine : HeroSpine
     private Custom PlaySkill3Anim()
     {
         specialAttackCustom = new Custom();
+        SpecialAttackTimes = 0;
         PlayAnim("Skill3");
         StartCoroutine(WaitPlayMagicEffect());
         return specialAttackCustom;
     }
 
+    /// <summary>
+    /// 播放技能3的攻击
+    /// </summary>
+    /// <returns></returns>
     private Custom PlaySkill3Attack()
     {
         specialAttackCustom = new Custom();
+        SpecialAttackTimes = 0;
         CurrentSkeleton.AnimationState.TimeScale = 2;
         PlayAnim("attack2");
         return specialAttackCustom;
     }
-    #endregion
 
+    /// <summary>
+    /// 播放技能4的动画
+    /// </summary>
+    /// <returns></returns>
+    private Custom PlaySkill4Anim()
+    {
+        specialAttackCustom = new Custom();
+        PlayAnim("Skill4");
+        return specialAttackCustom;
+    }
+
+    /// <summary>
+    /// 记录剑雨销毁的数量
+    /// </summary>
+    private void ArrowRainRecord()
+    {
+        rainArrowNumber++;
+        Debug.Log($"增加了剑雨记录次数:{rainArrowNumber}");
+    }
+    #endregion
 }

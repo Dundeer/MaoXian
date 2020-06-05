@@ -3,12 +3,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MgicEffectController : MonoBehaviour
+public enum PEffectsType
 {
+    Wind,
+    Magic,
+    Rain,
+    Care,
+    Aim,
+    AddBlood,
+    Boom
+}
+
+public class EffectsController : MonoBehaviour
+{
+    public bool debug;
     /// <summary>
     /// 监听类型
     /// </summary>
     public ListenceTarget listenceTarget;
+    /// <summary>
+    /// 粒子特效类型
+    /// </summary>
+    public PEffectsType pEffectsType;
+    /// <summary>
+    /// 是否控制停止
+    /// </summary>
+    public bool isStop;
+    /// <summary>
+    /// 停止的时间
+    /// </summary>
+    public float stopTime;
 
     private UnityEngine.ParticleSystem parentParticle;
 
@@ -20,10 +44,10 @@ public class MgicEffectController : MonoBehaviour
         switch (listenceTarget)
         {
             case ListenceTarget.Enemy:
-                target = "EnemyMagicPlay";
+                target = "Enemy" + pEffectsType.ToString() + "Play";
                 break;
             case ListenceTarget.Hero:
-                target = "HeroMagicPlay";
+                target = "Hero" + pEffectsType.ToString() + "Play";
                 break;
         }
         parentParticle = GetComponent<ParticleSystem>();
@@ -44,18 +68,36 @@ public class MgicEffectController : MonoBehaviour
 
     private void PlayEffects(Vector3 pos)
     {
+        if (debug)
+            Debug.Log($"{name} 播放特效");
         transform.localPosition = pos;
         foreach (ParticleSystem child in childParticle)
         {
             child.gameObject.SetActive(true);
         }
         parentParticle.Play();
-        StartCoroutine(StopEffects());
+        if (isStop)
+            StartCoroutine(StopEffects());
     }
 
     IEnumerator StopEffects()
     {
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(stopTime);
         EffectInit();
+    }
+
+    private void OnDestroy()
+    {
+        string target = "";
+        switch (listenceTarget)
+        {
+            case ListenceTarget.Enemy:
+                target = "Enemy" + pEffectsType.ToString() + "Play";
+                break;
+            case ListenceTarget.Hero:
+                target = "Hero" + pEffectsType.ToString() + "Play";
+                break;
+        }
+        EventManager.UnRegister<Vector3>(target, PlayEffects);
     }
 }

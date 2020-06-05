@@ -8,9 +8,17 @@ using QFramework;
 public class PlayerController : MonoBehaviour
 {
     /// <summary>
-    /// 敌人
+    /// 敌人组1
     /// </summary>
-    public EnemySpine[] EnemyObject;
+    public EnemySpine[] EnemyObject1;
+    /// <summary>
+    /// 敌人组2
+    /// </summary>
+    public EnemySpine[] EnemyObject2;
+    /// <summary>
+    /// 敌人组3
+    /// </summary>
+    public EnemySpine[] EnemyObject3;
     /// <summary>
     /// 英雄
     /// </summary>
@@ -19,10 +27,14 @@ public class PlayerController : MonoBehaviour
     /// 金币预制体
     /// </summary>
     public GoldController GoldObject;
+
+    [Space]
+  
     /// <summary>
     /// 金币回收位置
     /// </summary>
     public Transform goldPos;
+
     /// <summary>
     /// 当前英雄
     /// </summary>
@@ -43,6 +55,14 @@ public class PlayerController : MonoBehaviour
     /// 用户金币数
     /// </summary>
     private int UserGold;
+    /// <summary>
+    /// 当前敌人组
+    /// </summary>
+    private EnemySpine[] EnemyObject;
+    /// <summary>
+    /// 当前敌人下标
+    /// </summary>
+    private int currentEnemyIndex;
 
     // Start is called before the first frame update
     void Start()
@@ -60,6 +80,7 @@ public class PlayerController : MonoBehaviour
         currentHero.transform.SetParent(transform);
         currentHero.transform.localScale = new Vector3(1, 1, 1);
         currentHero.transform.localPosition = new Vector2(-DataBase.SCREEN_WIDTH * 0.25f, -DataBase.SCREEN_HEIGHT * 0.13f);
+        currentHero.Create();
     }
 
     /// <summary>
@@ -79,8 +100,24 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void CreateEnemy()
     {
-        int randomEnemyIndex = UnityEngine.Random.Range(0, EnemyObject.Length);
-        currentEnemy = GameObject.Instantiate(EnemyObject[randomEnemyIndex], transform, false);
+        if(EnemyObject == null || currentEnemyIndex == EnemyObject.Length)
+        {
+            currentEnemyIndex = 0;
+            int randomEnemyGroup = 0;//UnityEngine.Random.Range(0, 3);
+            switch(randomEnemyGroup)
+            {
+                case 0:
+                    EnemyObject = EnemyObject1;
+                    break;
+                case 1:
+                    EnemyObject = EnemyObject2;
+                    break;
+                case 2:
+                    EnemyObject = EnemyObject3;
+                    break;
+            }
+        }
+        currentEnemy = GameObject.Instantiate(EnemyObject[currentEnemyIndex], transform, false);
         currentEnemy.Create();
         float enemyHeight = 0;
         switch(currentEnemy.enemyType)
@@ -93,6 +130,7 @@ public class PlayerController : MonoBehaviour
                 break;
         }
         currentEnemy.transform.localPosition = new Vector2(DataBase.SCREEN_WIDTH / 2, enemyHeight);
+        currentEnemyIndex++;
     }
 
     /// <summary>
@@ -104,6 +142,11 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(MoveEnemyFunc(moveCustom));
     }
 
+    /// <summary>
+    /// 移动敌人携程
+    /// </summary>
+    /// <param name="moveCustom">移动监听</param>
+    /// <returns></returns>
     IEnumerator MoveEnemyFunc(Custom moveCustom)
     {
         Vector2 enemyPos = currentEnemy.transform.localPosition;
@@ -154,7 +197,6 @@ public class PlayerController : MonoBehaviour
             Debug.Log("金币预制体没有找到");
             yield break;
         };
-        currentEnemy.CloseBox();
         Vector2 enemyPos = currentEnemy.transform.localPosition;
         int randomGoldNumber = UnityEngine.Random.Range(5, 10);
         while (randomGoldNumber > 0)

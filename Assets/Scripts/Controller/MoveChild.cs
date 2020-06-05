@@ -72,7 +72,6 @@ public class MoveChild : MonoBehaviour
     {
         if (moveCoroutine != null)
         {
-            Debug.Log("请求停止背景移动");
             StopCoroutine(moveCoroutine);
         }
            

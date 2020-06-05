@@ -18,10 +18,6 @@ public class SpineController : MonoBehaviour
     [NonSerialized]
     public TrackEntry CurrentTrackEntry = null;
     /// <summary>
-    /// 敌人血量
-    /// </summary>
-    public float CurrentBlood = 100;
-    /// <summary>
     /// 攻击位置
     /// </summary>
     public BoneFollowerGraphic AttackPos;
@@ -41,10 +37,13 @@ public class SpineController : MonoBehaviour
     /// 暴击文字
     /// </summary>
     public HitTextBase criticalStrikeObject;
+
+    [Space]
+
     /// <summary>
-    /// 普通受击的特效
+    /// 敌人血量
     /// </summary>
-    public GameObject NormalEffect;
+    public float CurrentBlood = 100;
     /// <summary>
     /// 添加事件
     /// </summary>
@@ -94,6 +93,13 @@ public class SpineController : MonoBehaviour
     #endregion
 
     #region CommonFunc
+    /// <summary>
+    /// 创建
+    /// </summary>
+    public virtual void Create()
+    {
+
+    }
     /// <summary>
     /// 攻击
     /// </summary>

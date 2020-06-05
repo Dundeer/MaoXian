@@ -1,4 +1,6 @@
-﻿using Spine;
+﻿using QFramework;
+using Spine;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -34,23 +36,21 @@ public class EnemySpine : SpineController
     /// <summary>
     /// 敌人死亡记录
     /// </summary>
-    private Custom deadCustom;
+    [NonSerialized]
+    public Custom deadCustom;
     /// <summary>
     /// 创造箭矢的携程
     /// </summary>
     private Coroutine createCoroutine;
 
-    public virtual void Create()
-    {
-        
-    }
-
     /// <summary>
     /// 获取记录敌人死亡的Custom
     /// </summary>
     /// <param name="deadCustom">记录用的Custom</param>
-    public void GetDeadCustom(Custom deadCustom)
+    public virtual void GetDeadCustom(Custom deadCustom)
     {
+        if (debug)
+            Debug.Log($"{name}获取到了死亡监听");
         this.deadCustom = deadCustom;
     }
 
@@ -87,7 +87,7 @@ public class EnemySpine : SpineController
     /// <param name="hitNumber">伤害数字</param>
     private float GetHitNumberShow(float hitNumber)
     {
-        float isCriticalStrike = Random.Range(0, 4.0f);
+        float isCriticalStrike = UnityEngine.Random.Range(0, 4.0f);
         if(isCriticalStrike > 3.0f)
         {
             //暴击了
@@ -98,11 +98,8 @@ public class EnemySpine : SpineController
         {
             //没有暴击
             CreateHitNumberObjcet(GetHitType.Normal, hitNumber);
-            GameObject gameObject = GameObject.Instantiate(NormalEffect);
-            float strechScale = (Screen.width * Screen.height) / (DataBase.SCREEN_HEIGHT * DataBase.SCREEN_WIDTH);
-            Vector3 uiBoomPos = new Vector3(transform.localPosition.x * strechScale + (0.5f * DataBase.SCREEN_WIDTH), (transform.localPosition.y + 200) * strechScale + (0.5f * DataBase.SCREEN_HEIGHT), 10);
-            Debug.Log("爆炸位置" + uiBoomPos);
-            gameObject.transform.position = Camera.main.ScreenToWorldPoint(uiBoomPos);
+            RectTransform rectT = (RectTransform)transform;
+            EventManager.Send<Vector3>("HeroBoomPlay", new Vector3(0, rectT.rect.height / 2, 0));
         }
         return hitNumber;
     }
@@ -128,7 +125,8 @@ public class EnemySpine : SpineController
 
     public void StopCreate()
     {
-        if (createCoroutine != null) StopCoroutine(createCoroutine);
+        if (createCoroutine != null) 
+            StopCoroutine(createCoroutine);
     }
 
     IEnumerator DelayCreateFunc(float waitTime, int arrowType)

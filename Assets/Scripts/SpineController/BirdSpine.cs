@@ -1,26 +1,79 @@
 ﻿using Spine;
+using System.Collections;
+using UnityEngine;
 
 public enum BirdLevel
 {
+    Normal,
+    Elite,
+    Boss
+}
 
+public enum BirdAttackMode
+{
+    Normal,
+    Special
+}
+
+public enum SpecialAttackMode
+{
+    Combo
 }
 
 public class BirdSpine : EnemySpine
 {
+    [Space]
+    public BirdLevel birdLevel; 
+    /// <summary>
+    /// 是否已经死亡
+    /// </summary>
+    private bool IsDead = false;
+    /// <summary>
+    /// 最大血量
+    /// </summary>
+    private float maxBlood;
+    /// <summary>
+    /// 普通攻击次数
+    /// </summary>
+    private int normalAttackNumber = 0;
+    /// <summary>
+    /// 当前鸟类攻击模式
+    /// </summary>
+    private BirdAttackMode birdAttackMode = BirdAttackMode.Normal;
+    /// <summary>
+    /// 特殊攻击携程
+    /// </summary>
+    private Coroutine specialAttackCorotine;
+    /// <summary>
+    /// 特殊攻击监听
+    /// </summary>
+    private Custom specialAttackCustom;
+    /// <summary>
+    /// 特殊攻击次数
+    /// </summary>
+    private int specialAttackTimes;
+
+    private SpecialAttackMode specialAttackMode;
+
     public override void Create()
     {
         StandBy();
         currentBloodLine.IniteBlood(CurrentBlood);
+        maxBlood = CurrentBlood;
     }
 
     public override void Dead()
     {
-        base.Dead();
         PlayAnim("Gethit1");
+        IsDead = true;
+        CloseBox();
+        StopSpecialAttack();
     }
 
     public override void GetHit()
     {
+        if (specialAttackCorotine != null)
+            return;
         PlayAnim("Gethit1");
     }
 
@@ -36,8 +89,17 @@ public class BirdSpine : EnemySpine
 
     public override void Attack()
     {
+        DelayAttack(0.5f);
+    }
+
+    /// <summary>
+    /// 带延时的攻击
+    /// </summary>
+    /// <param name="delay">延时时间</param>
+    private void DelayAttack(float delay, int arrowType = 0)
+    {
         PlayAnim("attack");
-        DelayCreate(0.5f, 0);
+        DelayCreate(delay, arrowType);
     }
 
     public override void StartHandleEvent(TrackEntry trackEntry)
@@ -56,11 +118,42 @@ public class BirdSpine : EnemySpine
         switch (trackEntry.ToString())
         {
             case "attack":
-                CreateArrow(0, TargetType.Hero);
-                StandBy(false);
+                switch(birdLevel)
+                {
+                    case BirdLevel.Normal:
+                        StandBy(false);
+                        break;
+                    case BirdLevel.Elite:
+                        switch(birdAttackMode)
+                        {
+                            case BirdAttackMode.Normal:
+                                StandBy(false);
+                                break;
+                            case BirdAttackMode.Special:
+                                specialAttackTimes++;
+                                if (specialAttackTimes == 2)
+                                {
+                                    specialAttackCustom.complete = true;
+                                }
+                                else
+                                {
+                                    DelayAttack(0.25f);
+                                }
+                                break;
+                        }
+                        break;
+                }
                 break;
             case "Gethit1":
-                WaitAttack();
+                if (IsDead)
+                {
+                    deadCustom.complete = true;
+                    gameObject.SetActive(false);
+                }
+                else
+                {
+                    WaitAttack();
+                }
                 break;
             case "Standby":
                 WaitAttack();
@@ -70,7 +163,71 @@ public class BirdSpine : EnemySpine
 
     private void WaitAttack()
     {
-        Attack();
+        switch(birdLevel)
+        {
+            case BirdLevel.Normal:
+                Attack();
+                break;
+            case BirdLevel.Elite:
+                EliteAttack();
+                break;
+        }
     }
 
+    /// <summary>
+    /// 停止特殊攻击
+    /// </summary>
+    private void StopSpecialAttack()
+    {
+        if (specialAttackCorotine == null)
+            return;
+        StopCoroutine(specialAttackCorotine);
+        switch(specialAttackMode)
+        {
+            case SpecialAttackMode.Combo:
+                StopCreate();
+                break;
+        }
+    }
+
+    /// <summary>
+    /// 精英攻击
+    /// </summary>
+    private void EliteAttack()
+    {
+        normalAttackNumber++;
+        if (normalAttackNumber > 1)
+        {
+            normalAttackNumber = 0;
+            birdAttackMode = BirdAttackMode.Special;
+            DoubleCombo();
+        }
+        else
+        {
+            Attack();
+        }
+    }
+
+    private void DoubleCombo()
+    {
+        specialAttackMode = SpecialAttackMode.Combo;
+        specialAttackCorotine = StartCoroutine(DoubleComboTask());
+    }
+
+    IEnumerator DoubleComboTask()
+    {
+        //播放攻击动作
+        CurrentSkeleton.AnimationState.TimeScale = 2;
+        DelayAttack(0.25f);
+
+        //记录动画
+        specialAttackCustom = new Custom();
+        yield return specialAttackCustom;
+
+        //回归正常
+        birdAttackMode = BirdAttackMode.Normal;
+        CurrentSkeleton.AnimationState.TimeScale = 1;
+        StandBy(false);
+        specialAttackCorotine = null;
+    }
 }

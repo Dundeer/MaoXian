@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 2385192249038882523}
   - component: {fileID: 198534129802538438}
   - component: {fileID: 199454780397902284}
-  - component: {fileID: 8852803948834937489}
+  - component: {fileID: 1266442875464362134}
   m_Layer: 0
-  m_Name: Csm_fx
+  m_Name: MagicEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4715,7 +4715,7 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
---- !u!114 &8852803948834937489
+--- !u!114 &1266442875464362134
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4724,10 +4724,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1037646648361748}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7265ba167972b6408bc99e3fee5f26f, type: 3}
+  m_Script: {fileID: 11500000, guid: 178f5b4213fe5154192b1dd6d266c027, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   listenceTarget: 0
+  pEffectsType: 1
+  isStop: 1
+  stopTime: 1
 --- !u!1 &1083555512935582
 GameObject:
   m_ObjectHideFlags: 0

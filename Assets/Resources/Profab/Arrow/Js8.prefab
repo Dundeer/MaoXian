@@ -91,7 +91,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 20
   arrowType: 2
-  AttackBlood: 300
+  AttackBlood: 800
 --- !u!50 &2820616135644804747
 Rigidbody2D:
   serializedVersion: 4

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QFramework;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.SceneManagement;
@@ -71,18 +72,24 @@ public class ArrowController : MonoBehaviour
     /// 存活时间
     /// </summary>
     private float liveTime;
+    /// <summary>
+    /// 是否已经攻击过
+    /// </summary>
+    private bool isAttacked = false;
 
     private void Start()
     {
         ArrowMove();
     }
+
     /// <summary>
     /// 设置目标类型
     /// </summary>
     /// <param name="type"></param>
-    public void SetTarget(TargetType type)
+    public void SetTarget(TargetType type, bool setEuler = true)
     {
         currentTarget = type;
+        if (!setEuler) return;
         switch(type)
         {
             case TargetType.Enemy:
@@ -101,6 +108,7 @@ public class ArrowController : MonoBehaviour
     {
         StartCoroutine(Move());
     }
+
     /// <summary>
     /// 移动方法
     /// </summary>
@@ -118,8 +126,8 @@ public class ArrowController : MonoBehaviour
             }
         }
     }
-    #region 碰撞方法
 
+    #region 碰撞方法
     private void OnTriggerEnter2D(Collider2D collision)
     {
         GameObject collistionObject = collision.gameObject;
@@ -135,7 +143,7 @@ public class ArrowController : MonoBehaviour
                 CollistionArrow(collistionObject);
                 break;
             case "Down":
-                Destroy(GetComponent<Rigidbody2D>());
+                CollistionDown(collistionObject);
                 break;
         }
     }
@@ -156,7 +164,6 @@ public class ArrowController : MonoBehaviour
                 break;
         }
     }
-
 
     /// <summary>
     /// 碰到英雄
@@ -181,12 +188,14 @@ public class ArrowController : MonoBehaviour
         switch (currentTarget)
         {
             case TargetType.Enemy:
+                if (isAttacked) return;
                 EnemySpine enemySpine = collision.GetComponent<EnemySpine>();
                 enemySpine.GetHit(AttackBlood);
                 switch (arrowType)
                 {
                     case ArrowType.rain:
-                        Destroy(gameObject);
+                        if (!isAttacked)
+                            isAttacked = true;
                         break;
                     default:
                         Destroy(gameObject);
@@ -206,6 +215,22 @@ public class ArrowController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    /// <summary>
+    /// 碰撞到地面
+    /// </summary>
+    /// <param name="collision"></param>
+    public virtual void CollistionDown(GameObject collision)
+    {
+        switch(arrowType)
+        {
+            case ArrowType.rain:
+                EventManager.Send("ArrowRainRecord");
+                EventManager.Send<Vector3>("HeroRainPlay", transform.localPosition);
+                break;
+        }
+        Destroy(gameObject);
     }
     #endregion
 }

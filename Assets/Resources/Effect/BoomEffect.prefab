@@ -161,9 +161,9 @@ GameObject:
   - component: {fileID: 8551579318599364232}
   - component: {fileID: 198020577013345018}
   - component: {fileID: 199294168548160230}
-  - component: {fileID: 3720411086314474004}
+  - component: {fileID: 8510577409691531198}
   m_Layer: 0
-  m_Name: 00_sj_fx
+  m_Name: BoomEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4859,7 +4859,7 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
---- !u!114 &3720411086314474004
+--- !u!114 &8510577409691531198
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4868,6 +4868,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1963356375425258}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: abfc0ece182a33d41b7024df91f52237, type: 3}
+  m_Script: {fileID: 11500000, guid: 178f5b4213fe5154192b1dd6d266c027, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  listenceTarget: 0
+  pEffectsType: 6
+  isStop: 0
+  stopTime: 0
