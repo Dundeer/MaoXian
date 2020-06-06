@@ -225,9 +225,6 @@ public class GuardSpine : HeroSpine
                     specialAttackCustom.complete = true;
                 }
                 break;
-            case "Skill4":
-                specialAttackCustom.complete = true;
-                break;
         }
     }
     #endregion
@@ -285,10 +282,21 @@ public class GuardSpine : HeroSpine
     /// <returns></returns>
     IEnumerator WaitPlayMagicEffect()
     {
-        yield return new WaitForSeconds(0.2f);
+        //等待到达位置
+        yield return new WaitForSeconds(0.4f);
+
+        //展示附魔动画
+        CurrentSkeleton.AnimationState.TimeScale = 0;
         AttackPos.SetBone("d_g");
         AttackPos.Initialize();
+        EventManager.Send<float>("HeroMagicTime", 2.5f);
+        EventManager.Send<bool>("HeroMagicSet", true);
+        EventManager.Send<int>("HeroMagicMode", 0);
         EventManager.Send<Vector3>("HeroMagicPlay", AttackPos.transform.localPosition + AttackPos.transform.parent.localPosition);
+        yield return new WaitForSeconds(2.0f);
+
+        //恢复动作
+        CurrentSkeleton.AnimationState.TimeScale = 1;
     }
 
     IEnumerator ArrowRain()
@@ -346,11 +354,27 @@ public class GuardSpine : HeroSpine
         //播放魔法动画
         AttackPos.SetBone("z_g");
         AttackPos.Initialize();
+        EventManager.Send<bool>("HeroMagicSet", true);
+        EventManager.Send<float>("HeroMagicTime", 10.0f);
+        EventManager.Send<int>("HeroMagicMode", 1);
         EventManager.Send<Vector3>("HeroMagicPlay", AttackPos.transform.localPosition + AttackPos.transform.parent.localPosition);
         yield return new WaitForSeconds(1.0f);
 
         //播放攻击动画
-        yield return PlaySkill4Anim();
+        PlayAnim("Skill4");
+
+        //特效跟随
+        float followTime = 0;
+        AttackPos.SetBone("s_g");
+        while (followTime < 0.6f)
+        {
+            yield return null;
+            followTime += Time.deltaTime;
+            AttackPos.Initialize();
+            EventManager.Send<Vector3>("HeroMagicPos", AttackPos.transform.localPosition + AttackPos.transform.parent.localPosition);
+        }
+
+        yield return new WaitForSeconds(2.0f);
     }
 
     IEnumerator CareAttack()
@@ -634,17 +658,6 @@ public class GuardSpine : HeroSpine
         SpecialAttackTimes = 0;
         CurrentSkeleton.AnimationState.TimeScale = 2;
         PlayAnim("attack2");
-        return specialAttackCustom;
-    }
-
-    /// <summary>
-    /// 播放技能4的动画
-    /// </summary>
-    /// <returns></returns>
-    private Custom PlaySkill4Anim()
-    {
-        specialAttackCustom = new Custom();
-        PlayAnim("Skill4");
         return specialAttackCustom;
     }
 
