@@ -84,21 +84,20 @@ MonoBehaviour:
   debug: 0
   AttackPos: {fileID: 4303215223025706513}
   arrowGroup:
-  - {fileID: 4396047720169464372, guid: 48b54af393c29fd4c91afb4278d64a2f, type: 3}
-  - {fileID: 5443161062399954522, guid: 8ed3463389326d54d9544c54c829890d, type: 3}
-  - {fileID: 2820616135644804745, guid: 017fc19aeefabc1438acf3db0bc7989b, type: 3}
-  - {fileID: 7368985760803640466, guid: f2490f080179a3b4084581fe79b25225, type: 3}
+  - {fileID: 1375782568165754701, guid: f06c5ca165ee2d64a8011404e454f368, type: 3}
+  - {fileID: 1960346986870134627, guid: ab362de00d6ec52448e1fd293cee4941, type: 3}
+  - {fileID: 5941936754596546400, guid: 1e548795494f0b842b842f56f58ad64c, type: 3}
+  - {fileID: 8056805614967213531, guid: 4ac48e1fb9b1be14190287735b85f491, type: 3}
   currentBloodLine: {fileID: 7404266251890518552}
   noramlHitObject: {fileID: 6813890714174394449, guid: 47af43de33d755048bdff516518ce767,
     type: 3}
   criticalStrikeObject: {fileID: 7054101984065259498, guid: 95311f4d8f17b0642be4cd1d049f80fa,
     type: 3}
   CurrentBlood: 8000
+  AddBloodObject: {fileID: 8145338538994353671, guid: c49344e4d02046949afdc9b7800cd4a9,
+    type: 3}
   NormalData: {fileID: 11400000, guid: 12953d48b1659774099280475ef831cf, type: 2}
   AttackData: {fileID: 11400000, guid: 8b558a914c9ceea4daf3b85f66392a13, type: 2}
-  SpineTransform: {fileID: 3040251776196490479}
-  AddBloodObject: {fileID: 2229072862076042810, guid: c49344e4d02046949afdc9b7800cd4a9,
-    type: 3}
   specialAttackModeGroup1: 010000000200000000000000
 --- !u!1 &3040251776095633195
 GameObject:
@@ -783,7 +782,7 @@ PrefabInstance:
     - target: {fileID: 1167126233641210429, guid: 807d1841687d21a428fe2ac945c85fd1,
         type: 3}
       propertyPath: stopTime
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1167126233641210429, guid: 807d1841687d21a428fe2ac945c85fd1,
         type: 3}

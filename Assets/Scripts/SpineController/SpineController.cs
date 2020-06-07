@@ -32,11 +32,11 @@ public class SpineController : MonoBehaviour
     /// <summary>
     /// 普通受击文字
     /// </summary>
-    public HitTextBase noramlHitObject;
+    public HitTextController noramlHitObject;
     /// <summary>
     /// 暴击文字
     /// </summary>
-    public HitTextBase criticalStrikeObject;
+    public HitTextController criticalStrikeObject;
 
     [Space]
 
@@ -150,7 +150,7 @@ public class SpineController : MonoBehaviour
     /// <param name="number">伤害数字</param>
     public void CreateHitNumberObjcet(GetHitType hitType, float number)
     {
-        HitTextBase gameObject = null;
+        HitTextController gameObject = null;
         switch (hitType)
         {
             case GetHitType.Normal:

@@ -89,6 +89,7 @@ public class EffectsController : MonoBehaviour
         EventManager.Register<bool>(Set, SetSpecial);
         EventManager.Register<int>(Mode, SetSpecialMode);
         EventManager.Register<Vector3>(Pos, SetPos);
+        EventManager.Register("EffectAllStop", EffectInit);
     }
 
     private void EffectInit()
@@ -237,12 +238,14 @@ public class EffectsController : MonoBehaviour
         {
             child.transform.DOScale(new Vector3(0.1f, 0.1f, 0.1f), 0.7f).SetEase(Ease.OutQuint);
         }
-        yield return new WaitForSeconds(1.6f);
+        yield return new WaitForSeconds(1.15f);
 
-        transform.DOLocalMove(new Vector3(DataBase.SCREEN_WIDTH / 2, DataBase.SCREEN_HEIGHT / 2 + 200), 1.0f);
+        transform.DOLocalMove(new Vector3(DataBase.SCREEN_WIDTH / 2, DataBase.SCREEN_HEIGHT / 2 + 200), 0.5f);
+        yield return new WaitForSeconds(0.5f);
+
         foreach (ParticleSystem child in childParticle)
         {
-            child.transform.DOScale(Vector3.one, 1.0f);
+            child.transform.DOScale(Vector3.one, 0.5f);
         }
     }
 

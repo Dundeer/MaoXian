@@ -67,9 +67,9 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 3762a479c94b3b54fa590496c4d37182, type: 3}
     m_FontSize: 60
-    m_FontStyle: 0
+    m_FontStyle: 3
     m_BestFit: 1
     m_MinSize: 6
     m_MaxSize: 60
@@ -89,9 +89,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6615047990499568492}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f7b7598f6e8fb44f9a0f294507e402b, type: 3}
+  m_Script: {fileID: 11500000, guid: b9fda8f3ad7402e45b4f66a2d53105f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   showText: {fileID: 6615047990499568494}
-  maxTime: 3
-  moveSpeed: 80
+  maxTime: 2
+  moveSpeed: 100
+  hitTextType: 2

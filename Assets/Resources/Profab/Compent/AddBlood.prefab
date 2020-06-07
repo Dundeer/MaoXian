@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2229072862076042815}
   - component: {fileID: 2229072862076042813}
+  - component: {fileID: 8145338538994353671}
   - component: {fileID: 2229072862076042812}
-  - component: {fileID: 2229072862076042810}
   m_Layer: 5
   m_Name: AddBlood
   m_TagString: Untagged
@@ -46,6 +46,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2229072862076042814}
   m_CullTransparentMesh: 0
+--- !u!114 &8145338538994353671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2229072862076042814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9fda8f3ad7402e45b4f66a2d53105f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showText: {fileID: 2229072862076042812}
+  maxTime: 1
+  moveSpeed: 200
+  hitTextType: 1
 --- !u!114 &2229072862076042812
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80,18 +96,3 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: +100
---- !u!114 &2229072862076042810
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2229072862076042814}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af45d3d49df02be4596108147e4dc34a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showText: {fileID: 2229072862076042812}
-  maxTime: 0.5
-  moveSpeed: 500

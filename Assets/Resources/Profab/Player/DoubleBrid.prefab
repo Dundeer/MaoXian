@@ -51,13 +51,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
-  CurrentBlood: 100
   AttackPos: {fileID: 0}
   arrowGroup: []
   currentBloodLine: {fileID: 0}
   noramlHitObject: {fileID: 0}
   criticalStrikeObject: {fileID: 0}
-  NormalEffect: {fileID: 0}
+  CurrentBlood: 100
   enemyType: 1
   currentBox: {fileID: 0}
   childSpine:
@@ -133,7 +132,7 @@ PrefabInstance:
     - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 28
+      value: -84
       objectReference: {fileID: 0}
     - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
         type: 3}
@@ -278,7 +277,7 @@ PrefabInstance:
     - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -84
+      value: 28
       objectReference: {fileID: 0}
     - target: {fileID: 8947149935612520949, guid: 6596b2a1dd27b8e4ba3d7fe192425873,
         type: 3}
