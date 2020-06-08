@@ -101,6 +101,7 @@ public class PlayerController : MonoBehaviour
         playerModeChangeBT.onClick.AddListener(PlayerModeChange);
     }
 
+    [ContextMenu("PlayerModeChange")]                                                       //代码组件右键添加自定义方法
     private void PlayerModeChange()
     {
         Text btText = playerModeChangeBT.GetComponentInChildren<Text>();

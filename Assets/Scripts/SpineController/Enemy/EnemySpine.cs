@@ -29,6 +29,8 @@ public class EnemySpine : SpineController
     /// 当前敌人类型
     /// </summary>
     public EnemyType enemyType;
+
+    public EffectsController boomEffecotController;
     /// <summary>
     /// 碰撞核
     /// </summary>
@@ -83,7 +85,8 @@ public class EnemySpine : SpineController
             //没有暴击
             CreateHitNumberObjcet(GetHitType.Normal, hitNumber);
             RectTransform rectT = (RectTransform)transform;
-            EventManager.Send<Vector3>("HeroBoomPlay", new Vector3(0, rectT.rect.height / 2, 0));
+            //EventManager.Send<Vector3>("HeroBoomPlay", new Vector3(0, rectT.rect.height / 2, 0));
+            boomEffecotController.PlayEffects(new Vector3(0, rectT.rect.height / 2, 0));
         }
         return hitNumber;
     }

@@ -104,7 +104,7 @@ public class EffectsController : MonoBehaviour
             StopCoroutine(specialCorotine);
     }
 
-    private void PlayEffects(Vector3 pos)
+    public void PlayEffects(Vector3 pos)
     {
         if (debug)
             Debug.Log($"{name} 播放特效");
