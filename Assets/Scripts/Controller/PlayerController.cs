@@ -50,6 +50,7 @@ public class PlayerController : MonoBehaviour
         CreateHero();
     }
 
+    [ContextMenu("PlayerModeChange")]                                                       //代码组件右键添加自定义方法
     private void PlayerModeChange()
     {
         Text btText = playerModeChangeBT.GetComponentInChildren<Text>();

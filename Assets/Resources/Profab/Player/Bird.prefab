@@ -86,7 +86,7 @@ RectTransform:
   m_Children:
   - {fileID: 8947149934032112109}
   m_Father: {fileID: 8947149935612520949}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -170,10 +170,10 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 8947149935025571231}
   - {fileID: 5868866728781058639}
   - {fileID: 1214868915}
   - {fileID: 1748180257611021273}
-  - {fileID: 8947149935025571231}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
@@ -231,6 +231,7 @@ MonoBehaviour:
     type: 3}
   CurrentBlood: 2000
   enemyType: 1
+  boomEffecotController: {fileID: 5891994968042179449}
   currentBox: {fileID: 8947149935612520948}
   birdLevel: 0
 --- !u!222 &2031502017114986888
@@ -319,7 +320,7 @@ PrefabInstance:
     - target: {fileID: 1972541247190671540, guid: 7b6de1943255d084295e84f157833335,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1972541247190671540, guid: 7b6de1943255d084295e84f157833335,
         type: 3}
@@ -448,7 +449,7 @@ PrefabInstance:
     - target: {fileID: 8551579318599364232, guid: 05a1db5db86972949bf81450ed084f86,
         type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8551579318599364232, guid: 05a1db5db86972949bf81450ed084f86,
         type: 3}
@@ -548,6 +549,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 2873075719249575111}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5891994968042179449 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8510577409691531198, guid: 05a1db5db86972949bf81450ed084f86,
+    type: 3}
+  m_PrefabInstance: {fileID: 2873075719249575111}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 178f5b4213fe5154192b1dd6d266c027, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6915598094990689191
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -559,16 +572,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BloodLine
-      objectReference: {fileID: 0}
-    - target: {fileID: 6915598095405809558, guid: 8d4d1abcaaf02b44d8a1e0f5518c6963,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6915598095405809558, guid: 8d4d1abcaaf02b44d8a1e0f5518c6963,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6915598096195956244, guid: 8d4d1abcaaf02b44d8a1e0f5518c6963,
         type: 3}
@@ -608,7 +611,7 @@ PrefabInstance:
     - target: {fileID: 6915598096195956244, guid: 8d4d1abcaaf02b44d8a1e0f5518c6963,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6915598096195956244, guid: 8d4d1abcaaf02b44d8a1e0f5518c6963,
         type: 3}
@@ -674,6 +677,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6915598095405809558, guid: 8d4d1abcaaf02b44d8a1e0f5518c6963,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6915598095405809558, guid: 8d4d1abcaaf02b44d8a1e0f5518c6963,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d4d1abcaaf02b44d8a1e0f5518c6963, type: 3}
