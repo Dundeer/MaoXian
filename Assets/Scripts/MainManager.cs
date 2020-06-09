@@ -39,6 +39,11 @@ public class MainManager : QMonoSingleton<MainManager>
         StartCoroutine(MainTask());
     }
 
+    private void Init()
+    {
+        playerController.Open();
+    }
+
     IEnumerator MainTask()
     {
         while (true)

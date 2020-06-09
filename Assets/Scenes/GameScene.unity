@@ -547,8 +547,26 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6671725959042287777, guid: 364bdeb96b03f7044ab995562987e812,
         type: 3}
-    m_RemovedComponents: []
+    - target: {fileID: 5017383689516494488, guid: cf452e86a7e210a4d8cf867ed2b97c05,
+        type: 3}
+      propertyPath: goldNumber
+      value: 
+      objectReference: {fileID: 599124262}
+    m_RemovedComponents:
+    - {fileID: 770651111, guid: cf452e86a7e210a4d8cf867ed2b97c05, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: cf452e86a7e210a4d8cf867ed2b97c05, type: 3}
+--- !u!114 &599124262 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 770651109, guid: cf452e86a7e210a4d8cf867ed2b97c05,
+    type: 3}
+  m_PrefabInstance: {fileID: 599124261}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &744749674 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5017383689516494488, guid: cf452e86a7e210a4d8cf867ed2b97c05,
