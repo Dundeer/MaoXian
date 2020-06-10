@@ -31,6 +31,7 @@ namespace QFramework
             }
             catch (Exception e)
             {
+                Debug.Log(e);
                 return false;
             }
 

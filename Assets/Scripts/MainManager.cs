@@ -49,7 +49,7 @@ public class MainManager : QMonoSingleton<MainManager>
         while (true)
         {
             //英雄移动
-            playerController.HeroMove();
+            playerController.MoveHero();
 
             //移动背景
             foreach (MoveChild child in moveGroup)

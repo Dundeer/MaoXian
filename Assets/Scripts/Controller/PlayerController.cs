@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
 
     [Space]
     public Button playerModeChangeBT;           // 英雄模式切换按钮
-    public Image goldIcon;                      // 金币图标
+    public Transform goldIcon;                      // 金币图标
     public Text goldNumber;                     // 金币数量
 
     [Space]
@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour
     private PlayerNumberMode playerNumberMode;  // 当前玩家数量模式
     private int currentScreenEnemyNumber = 0;   // 当前场上敌人数量
     private int currentPlayerNumberModeScreenEnemyNumber = 1;           // 当前玩家模式最大同屏数量
+    private Custom enemyDeadCustom;             // 敌人死亡标记
 
     public void Open()
     {
@@ -50,7 +51,8 @@ public class PlayerController : MonoBehaviour
         CreateHero();
     }
 
-    [ContextMenu("PlayerModeChange")]                                                       //代码组件右键添加自定义方法
+    #region Hero
+    // [ContextMenu("PlayerModeChange")]                                //代码组件右键添加自定义方法
     private void PlayerModeChange()
     {
         Text btText = playerModeChangeBT.GetComponentInChildren<Text>();
@@ -68,12 +70,9 @@ public class PlayerController : MonoBehaviour
                 break;
         }
         CreateHero();
-        HeroMove();
+        MoveHero();
     }
 
-    /// <summary>
-    /// 创建英雄
-    /// </summary>
     private void CreateHero()
     {
         foreach(HeroSpine herospine in currentHero)
@@ -115,22 +114,17 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 英雄开始移动
-    /// </summary>
-    public void HeroMove()
+    public void MoveHero()
     {
         playerModeChangeBT.gameObject.SetActive(true);
-        if (currentHero.Count == 0)
-        {
-            CreateHero();
-        }
         foreach (HeroSpine child in currentHero)
         {
             child.Forward();
         }
     }
+    #endregion
 
+    #region Enemy
     public void EnemyFunc(Custom moveCustom)
     {
         //隐藏切换按钮
@@ -153,13 +147,9 @@ public class PlayerController : MonoBehaviour
         }
 
         //敌人开始移动
-        MoveEnemy(moveCustom);
-
+        StartCoroutine(MoveEnemyTask(moveCustom));
     }
 
-    /// <summary>
-    /// 生成敌人
-    /// </summary>
     private EnemySpine CreateEnemy()
     {
         EnemySpine createEnemy = GameObject.Instantiate(EnemyObject[currentEnemyIndex], transform, false);
@@ -191,37 +181,22 @@ public class PlayerController : MonoBehaviour
         currentScreenEnemyNumber++;
         return createEnemy;
     }
+    #endregion
 
-    /// <summary>
-    /// 移动敌人
-    /// </summary>
-    /// <returns>移动时间</returns>
-    private void MoveEnemy(Custom moveCustom)
-    {
-        StartCoroutine(MoveEnemyFunc(moveCustom));
-    }
-
-    
-    public Coroutine AttackForEnd()
+    #region AttackAndEnd
+    public Custom AttackForEnd()
     {
         foreach (HeroSpine heroSpine in currentHero)
         {
             heroSpine.Attack();
         }
-        return StartCoroutine(EnemyDead());
+        enemyDeadCustom = new Custom();
+        return enemyDeadCustom;
     }
 
-    /// <summary>
-    /// 产生金币
-    /// </summary>
-    private List<GoldController> CreateGold(EnemySpine createEnemy)
+    private List<GoldController> CreateGold(EnemySpine deadEnemy)
     {
-        if (GoldObject == null)
-        {
-            Debug.Log("金币预制体没有找到");
-            return null;
-        };
-        Vector2 enemyPos = createEnemy.transform.localPosition;
+        Vector2 enemyPos = deadEnemy.transform.localPosition;
         List<GoldController> goldGroup = new List<GoldController>();
         int randomGoldNumber = UnityEngine.Random.Range(5, 10);
         while (randomGoldNumber > 0)
@@ -233,8 +208,8 @@ public class PlayerController : MonoBehaviour
             goldGroup.Add(child);
             randomGoldNumber--;
         }
-        Destroy(createEnemy.gameObject);
-        currentEnemy.Remove(createEnemy);
+        Destroy(deadEnemy.gameObject);
+        currentEnemy.Remove(deadEnemy);
         return goldGroup;
     }
 
@@ -243,6 +218,20 @@ public class PlayerController : MonoBehaviour
         currentEnemyDead++;
         currentScreenEnemyNumber--;
         StartCoroutine(CreateAndRecycleGoldTask(createEnemey));
+
+        if (currentEnemyDead == EnemyObject.Length)
+        {
+            currentEnemyDead = 0;
+            foreach (HeroSpine heroSpine in currentHero)
+            {
+                heroSpine.StandBy();
+            }
+
+            DOTween.Sequence().AppendInterval(3.0f).OnComplete(() =>
+            {
+                enemyDeadCustom.complete = true;
+            });
+        }
     }
 
     /// <summary>
@@ -251,9 +240,17 @@ public class PlayerController : MonoBehaviour
     private void AddGoldNumber()
     {
         UserGold++;
-        EventManager.Send("GoldScaleAnim");
         goldNumber.text = UserGold.ToString();
+        StartGoldIconAnim();
     }
+
+    private void StartGoldIconAnim()
+    {
+        goldIcon.DOKill();
+        goldIcon.localScale = Vector3.one;
+        goldIcon.DOScale(new Vector3(1.5f, 1.5f, 1.5f), 0.05f).SetLoops(2, LoopType.Yoyo);
+    }
+    #endregion
 
     #region 携程
     /// <summary>
@@ -261,7 +258,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     /// <param name="moveCustom">移动监听</param>
     /// <returns></returns>
-    IEnumerator MoveEnemyFunc(Custom moveCustom)
+    IEnumerator MoveEnemyTask(Custom moveCustom)
     {
         while (true)
         {
@@ -300,40 +297,11 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                if (currentScreenEnemyNumber < currentPlayerNumberModeScreenEnemyNumber)
+                while (currentScreenEnemyNumber >= currentPlayerNumberModeScreenEnemyNumber)
                 {
-                    yield return new WaitForSeconds(UnityEngine.Random.Range(3, 5));
+                    yield return null;
                 }
-                else
-                {
-                    while (currentScreenEnemyNumber >= currentPlayerNumberModeScreenEnemyNumber)
-                    {
-                        yield return null;
-                    }
-
-                    yield return new WaitForSeconds(UnityEngine.Random.Range(3, 5));
-                }
-            }
-        }
-    }
-
-    IEnumerator EnemyDead()
-    {
-        while (true)
-        {
-            yield return null;
-
-            if (currentEnemyDead == EnemyObject.Length)
-            {
-                currentEnemyDead = 0;
-                foreach (HeroSpine heroSpine in currentHero)
-                {
-                    heroSpine.StandBy();
-                }
-
-                yield return new WaitForSeconds(3.0f);
-
-                yield break;
+                yield return new WaitForSeconds(UnityEngine.Random.Range(3, 5));
             }
         }
     }

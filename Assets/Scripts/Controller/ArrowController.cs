@@ -1,8 +1,5 @@
 ﻿using QFramework;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public enum ArrowType
@@ -24,6 +21,7 @@ public enum ArrowType
     /// </summary>
     rain
 }
+
 /// <summary>
 /// 目标类型
 /// </summary>
@@ -41,18 +39,11 @@ public enum TargetType
 
 public class ArrowController : MonoBehaviour
 {
-    /// <summary>
-    /// 箭的移动速度
-    /// </summary>
-    public float MoveSpeed;
-    /// <summary>
-    /// 箭矢类型
-    /// </summary>
-    public ArrowType arrowType;
-    /// <summary>
-    /// 造成伤害
-    /// </summary>
-    public int AttackBlood;
+    public ArrowType arrowType;         // 箭矢类型
+
+    [Space]
+    public float MoveSpeed;             // 箭的移动速度
+    public int AttackBlood;             // 造成伤害
 
     /// <summary>
     /// 目标标签
@@ -68,6 +59,7 @@ public class ArrowController : MonoBehaviour
             return currentTarget;
         }
     }
+
     /// <summary>
     /// 存活时间
     /// </summary>
@@ -77,9 +69,12 @@ public class ArrowController : MonoBehaviour
     /// </summary>
     private bool isAttacked = false;
 
-    private void Start()
+    /// <summary>
+    /// 箭的移动
+    /// </summary>
+    public void ArrowMove()
     {
-        ArrowMove();
+        StartCoroutine(Move());
     }
 
     /// <summary>
@@ -102,14 +97,6 @@ public class ArrowController : MonoBehaviour
     }
 
     /// <summary>
-    /// 箭的移动
-    /// </summary>
-    public void ArrowMove()
-    {
-        StartCoroutine(Move());
-    }
-
-    /// <summary>
     /// 移动方法
     /// </summary>
     /// <returns></returns>
@@ -127,110 +114,52 @@ public class ArrowController : MonoBehaviour
         }
     }
 
-    #region 碰撞方法
     private void OnTriggerEnter2D(Collider2D collision)
     {
         GameObject collistionObject = collision.gameObject;
         switch (collistionObject.tag)
         {
             case "Hero":
-                CollisionHero(collistionObject);
+                if (currentTarget == TargetType.Hero)
+                {
+                    HeroSpine heroSpine = collistionObject.GetComponent<HeroSpine>();
+                    heroSpine.GetHit(AttackBlood);
+                    Destroy(gameObject);
+                }
                 break;
             case "Enemy":
-                CollistionEnemy(collistionObject);
+                if (currentTarget == TargetType.Enemy)
+                {
+                    if (isAttacked) return;
+                    EnemySpine enemySpine = collistionObject.GetComponent<EnemySpine>();
+                    enemySpine.GetHit(AttackBlood);
+                    switch (arrowType)
+                    {
+                        case ArrowType.rain:
+                            if (!isAttacked)
+                                isAttacked = true;
+                            break;
+                        default:
+                            Destroy(gameObject);
+                            break;
+                    }
+                }
                 break;
             case "Arrow":
-                CollistionArrow(collistionObject);
+                ArrowController otherArrow = collistionObject.GetComponent<ArrowController>();
+                if (otherArrow.Target != currentTarget)
+                {
+                    Destroy(gameObject);
+                }
                 break;
             case "Down":
-                CollistionDown(collistionObject);
-                break;
-        }
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        GameObject collistionObject = collision.gameObject;
-        switch (collistionObject.tag)
-        {
-            case "Hero":
-                CollisionHero(collistionObject);
-                break;
-            case "Enemy":
-                CollistionEnemy(collistionObject);
-                break;
-            case "Arrow":
-                CollistionArrow(collistionObject);
-                break;
-        }
-    }
-
-    /// <summary>
-    /// 碰到英雄
-    /// </summary>
-    public virtual void CollisionHero(GameObject collision)
-    {
-        switch(currentTarget)
-        {
-            case TargetType.Hero:
-                HeroSpine heroSpine = collision.GetComponent<HeroSpine>();
-                heroSpine.GetHit(AttackBlood);
+                if (arrowType == ArrowType.rain)
+                {
+                    EventManager.Send("ArrowRainRecord");
+                    EventManager.Send<Vector3>("HeroRainPlay", transform.localPosition);
+                }
                 Destroy(gameObject);
                 break;
         }
     }
-
-    /// <summary>
-    /// 碰到敌人
-    /// </summary>
-    public virtual void CollistionEnemy(GameObject collision)
-    {
-        switch (currentTarget)
-        {
-            case TargetType.Enemy:
-                if (isAttacked) return;
-                EnemySpine enemySpine = collision.GetComponent<EnemySpine>();
-                enemySpine.GetHit(AttackBlood);
-                switch (arrowType)
-                {
-                    case ArrowType.rain:
-                        if (!isAttacked)
-                            isAttacked = true;
-                        break;
-                    default:
-                        Destroy(gameObject);
-                        break;
-                }
-                break;
-        }
-    }
-
-    /// <summary>
-    /// 碰到箭
-    /// </summary>
-    public virtual void CollistionArrow(GameObject collision)
-    {
-        ArrowController otherArrow = collision.GetComponent<ArrowController>();
-        if(otherArrow.Target != currentTarget)
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    /// <summary>
-    /// 碰撞到地面
-    /// </summary>
-    /// <param name="collision"></param>
-    public virtual void CollistionDown(GameObject collision)
-    {
-        switch(arrowType)
-        {
-            case ArrowType.rain:
-                EventManager.Send("ArrowRainRecord");
-                EventManager.Send<Vector3>("HeroRainPlay", transform.localPosition);
-                break;
-        }
-        Destroy(gameObject);
-    }
-    #endregion
 }
